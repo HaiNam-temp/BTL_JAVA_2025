@@ -1,0 +1,46 @@
+@use '../../../styles/shared-styles.scss' as *;
+
+.container-fluid {
+  background-color: white;
+  min-height: 100vh;
+}
+
+input.form-control {
+  max-width: 100%;
+}
+
+select.form-select {
+  min-width: 160px;
+}
+
+.table {
+  font-size: 0.95rem;
+  th, td {
+    vertical-align: middle;
+  }
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: $shopapp-color;
+  border-color: $shopapp-color;
+  color: white;
+}
+
+.page-link {
+  cursor: pointer;
+}
+
+.d-flex.gap-2 > * {
+  margin-right: 6px;
+}

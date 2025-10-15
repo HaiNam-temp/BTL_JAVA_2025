@@ -1,0 +1,58 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: shopapp-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "${DB_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shopapp-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SERVER_PORT: ${APP_PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - ./uploads:/app/uploads
+
+  flyway:
+    image: flyway/flyway:9
+    container_name: shopapp-flyway
+    restart: 'no'
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql:ro
+    command: -url=jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} -locations=filesystem:/flyway/sql migrate -connectRetries=60
+
+volumes:
+  db_data:

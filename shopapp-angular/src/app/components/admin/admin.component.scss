@@ -1,0 +1,113 @@
+/* Reset cơ bản cho HTML và Body */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Quan trọng để cuộn trang */
+  overflow-x: hidden; /* Ngăn chặn cuộn ngang */
+}
+
+/* Container chính của toàn bộ trang */
+.container-fluid {
+  background-color: white;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  display: flex; /* Sử dụng flexbox để căn chỉnh header, sidebar và content */
+  flex-direction: column; /* Xếp theo cột: header, rồi đến phần content-wrapper */
+  min-height: 100vh; /* Đảm bảo container chính đủ cao */
+}
+
+/* Header */
+.header {
+  background-color: #343a40;
+  color: white;
+  padding: 10px 15px;
+  /* Làm cho header cố định ở trên cùng */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Chiều rộng toàn bộ */
+  z-index: 1030; /* Đảm bảo header nằm trên mọi thứ */
+  display: flex; /* Giữ nguyên flexbox để căn chỉnh nội dung bên trong */
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Thêm bóng nhẹ cho header */
+}
+
+/* Row bọc sidebar và main content */
+.row.no-gutters {
+  /* Đẩy hàng này xuống dưới header cố định */
+  padding-top: 60px; /* Giả sử chiều cao của header là 60px */
+  display: flex; /* Giữ flexbox để sidebar và content nằm cạnh nhau */
+  flex: 1; /* Chiếm hết không gian còn lại */
+}
+
+/* Sidebar */
+#sidebar {
+  background-color: #343a40 !important;
+  color: white;
+  height: calc(100vh - 60px); /* Chiều cao bằng viewport trừ chiều cao header */
+  overflow-y: auto; /* Cho phép cuộn bên trong sidebar nếu nội dung sidebar dài */
+  transition: width 0.3s ease; /* Hiệu ứng chuyển động khi sidebar thu gọn/mở rộng */
+
+  /* CỐ ĐỊNH SIDEBAR */
+  position: fixed; /* Cố định vị trí của sidebar */
+  top: 60px;       /* Bắt đầu từ dưới header */
+  left: 0;         /* Bắt đầu từ left của viewport */
+  width: 16.6667%; /* Khoảng 2/12 cột của Bootstrap (col-md-2) */
+  /* Hoặc bạn có thể đặt một chiều rộng cố định nếu không muốn theo Bootstrap grid */
+  /* width: 200px; */ /* Ví dụ chiều rộng 200px */
+  z-index: 1020; /* Nằm dưới header nhưng trên nội dung chính */
+}
+
+#sidebar.collapsed {
+  width: 60px !important;
+}
+
+#sidebar.collapsed .nav-link span {
+  display: none;
+}
+
+#sidebar.collapsed .nav-link {
+  justify-content: center;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 12px 20px;
+  margin: 4px 8px;
+  border-radius: 6px;
+  border-top: none;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #495057;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  background-color: #495057;
+}
+
+.breadcrumb {
+  font-size: 0.9rem;
+  margin-top: 10px; /* Khoảng cách từ trên xuống */
+}
+
+#sidebar .nav {
+  padding-top: 15px;
+}
+
+/* Main Content Area */
+/* Class này áp dụng cho div .col-md-10 .col-lg-10 .overflow-auto */
+.col-md-10.col-lg-10.overflow-auto {
+  /* Đẩy nội dung chính sang phải bằng chiều rộng của sidebar */
+  margin-left: 16.6667%; /* Phải khớp với width của #sidebar */
+  /* Hoặc nếu sidebar có width cố định, ví dụ: */
+  /* margin-left: 200px; */
+  padding: 15px; /* Thêm padding cho nội dung */
+  overflow-y: auto; /* Cho phép cuộn riêng phần nội dung chính nếu nó dài */
+  height: calc(100vh - 60px); /* Giữ chiều cao bằng viewport trừ chiều cao header */
+}

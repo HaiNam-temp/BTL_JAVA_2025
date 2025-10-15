@@ -1,0 +1,53 @@
+<app-header></app-header>
+
+<div class="container my-4">
+  <div class="intro-section text-center mb-4">
+    <h1>🔔 Trang Thông Báo</h1>
+    <ng-container *ngIf="isLoggedIn; else loggedOutMessage">
+      <p *ngIf="!isLoading">Bạn có <strong>{{ unreadCount }}</strong> thông báo mới</p>
+      <button *ngIf="notifications.length > 0 && unreadCount > 0 && !isLoading"
+              (click)="markAllAsRead()"
+              class="btn btn-sm btn-outline-light mt-2">
+        Đánh dấu tất cả là đã đọc
+      </button>
+    </ng-container>
+    <ng-template #loggedOutMessage>
+      <p>Vui lòng <a routerLink="/login" class="text-warning">đăng nhập</a> để xem thông báo.</p>
+    </ng-template>
+  </div>
+
+  <div *ngIf="isLoading && isLoggedIn" class="text-center my-5">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Đang tải thông báo...</p>
+  </div>
+
+  <div *ngIf="!isLoading && isLoggedIn && notifications.length === 0" class="alert alert-info text-center" role="alert">
+    Bạn không có thông báo nào.
+  </div>
+
+  <ul *ngIf="!isLoading && isLoggedIn && notifications.length > 0" class="notification-list list-unstyled">
+    <li *ngFor="let noti of notifications"
+        class="notification-item"
+        [class.unread]="!noti.isRead"
+        [class.read]="noti.isRead"
+        (click)="markAsRead(noti)"
+        tabindex="0"
+        (keydown.enter)="markAsRead(noti)">
+
+      <span class="icon-container me-3 fs-4">
+        <i [ngClass]="getIconClass(noti.icon)" *ngIf="getIconClass(noti.icon)"></i>
+        <span *ngIf="!getIconClass(noti.icon)">{{ noti.icon }}</span>
+      </span>
+
+      <div class="content flex-grow-1">
+        <p class="mb-1 message-content">{{ noti.message }}</p>
+        <small class="time-ago">{{ noti.displayTime }}</small>
+      </div>
+      <span *ngIf="!noti.isRead" class="unread-indicator ms-auto" title="Chưa đọc"></span>
+    </li>
+  </ul>
+</div>
+
+<app-footer></app-footer>

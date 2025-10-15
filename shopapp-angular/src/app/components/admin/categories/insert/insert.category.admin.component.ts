@@ -1,0 +1,53 @@
+import { Component, OnInit } from '@angular/core';
+
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { InsertCategoryDTO } from '../../../../dtos/category/insert.category';
+import { ProductService } from '../../../../service/product.service';
+import { Category } from '../../../../models/category';
+import { CategoryService } from '../../../../service/category.service';
+
+@Component({
+  selector: 'app-insert.category.admin',
+  templateUrl: './insert.category.admin.component.html',
+  styleUrls: ['./insert.category.admin.component.scss'],
+  standalone: true,
+  imports: [   
+    CommonModule,
+    FormsModule,    
+  ]
+})
+export class InsertCategoryAdminComponent implements OnInit {
+  insertCategoryDTO: InsertCategoryDTO = {
+    name: '',    
+  };
+  categories: Category[] = []; // Dữ liệu động từ categoryService
+  constructor(    
+    private route: ActivatedRoute,
+    private router: Router,
+    private categoryService: CategoryService,    
+    private productService: ProductService,    
+  ) {
+    
+  } 
+  ngOnInit() {
+    
+  }   
+
+  insertCategory() {    
+    this.categoryService.insertCategory(this.insertCategoryDTO).subscribe({
+      next: (response) => {
+        debugger
+        this.router.navigate(['/admin/categories']);        
+      },
+      error: (error) => {
+        debugger
+        // Handle error while inserting the category
+        alert(error.error)
+        console.error('Error inserting category:', error);
+      }
+    });    
+  }
+}

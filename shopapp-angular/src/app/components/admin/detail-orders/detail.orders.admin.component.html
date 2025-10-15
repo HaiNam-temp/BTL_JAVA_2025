@@ -1,0 +1,85 @@
+<div class="container">
+  <h1>Chi tiết đơn hàng </h1>
+
+  <div *ngIf="orderResponse && orderResponse.id > 0; else loadingOrError">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Thông tin khách hàng </h3>
+        <p><strong>Order ID:</strong> {{ orderResponse.id }}</p>
+        <p><strong>User ID:</strong> {{ orderResponse.user_id }}</p>
+        <p><strong>Họ và tên :</strong> {{ orderResponse.fullname }}</p>
+        <p><strong>Số điện thoại :</strong> {{ orderResponse.phone_number }}</p>
+        <p><strong>Email:</strong> {{ orderResponse.email }}</p>
+        <p><strong>Địa chỉ :</strong> {{ orderResponse.address }}</p>
+        <p><strong>Ghi chú :</strong> {{ orderResponse.note }}</p>
+        <p><strong>Ngày đặt hàng:</strong> {{ orderResponse.order_date | date:'dd/MM/yyyy HH:mm' }}</p>
+
+        <div class="form-group mt-2 mb-3">
+          <label for="statusSelect"><strong>Trạng thái:</strong></label>
+          <select class="form-select" id="statusSelect" [(ngModel)]="orderResponse.status">
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h3>Chi tiết sản phẩm </h3>
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order_detail of orderResponse.order_details; let i = index">
+              <td>
+                <img *ngIf="order_detail.product.thumbnail"
+                     [src]="order_detail.product.thumbnail"
+                     alt="{{ order_detail.product.name }}"
+                     width="50"
+                     class="me-2">
+                {{ order_detail.product.name }}
+              </td>
+              <td>{{ order_detail.price | number:'1.0-0' }} đ</td>
+              <td>{{ order_detail.number_of_products }}</td>
+              <td>{{ order_detail.total_money | number:'1.0-0' }} đ</td>
+            </tr>
+            <tr *ngIf="!orderResponse.order_details || orderResponse.order_details.length === 0">
+                <td colspan="4" class="text-center">Không có sản phẩm nào trong đơn hàng.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-end mt-3">
+            <h4><strong>Tổng tiền đơn hàng: {{ orderResponse.total_money | number:'1.0-0' }} đ</strong></h4>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-end gap-2">
+        <button class="btn btn-info" (click)="downloadInvoice()" [disabled]="isDownloadingInvoice">
+          <span *ngIf="isDownloadingInvoice" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isDownloadingInvoice" class="fas fa-file-invoice"></i> {{ isDownloadingInvoice ? 'Đang xuất...' : 'Xuất hóa đơn' }}
+        </button>
+        <button class="btn btn-primary" (click)="saveOrder()">
+          <i class="fas fa-save"></i> Lưu thay đổi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div class="alert alert-info" role="alert">
+      Đang tải dữ liệu đơn hàng hoặc đơn hàng không tồn tại...
+    </div>
+  </ng-template>
+
+</div>

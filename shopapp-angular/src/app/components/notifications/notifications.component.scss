@@ -1,0 +1,132 @@
+// Biến màu (tùy chỉnh cho phù hợp với theme của bạn nếu cần)
+$background-color: rgba(12, 15, 29, 0.9); // Nền tối hơn một chút
+$item-background-color: rgba(19, 23, 42, 0.85);
+$item-background-hover-color: rgba(30, 35, 60, 0.95);
+$item-border-color: rgba(255, 255, 255, 0.15);
+$text-color: white;
+$text-muted-color: #adb5bd; // Màu xám nhạt hơn cho text phụ
+$unread-shadow-color: rgba(255, 120, 180, 0.6);
+$unread-border-color: #ff78b4; // Màu hồng cho viền thông báo chưa đọc
+$unread-indicator-color: #dc3545; // Màu đỏ cho chấm báo chưa đọc
+
+.container {
+  padding: 20px;
+  color: $text-color;
+  min-height: calc(100vh - 120px); // Giả sử header và footer cao tổng cộng 120px
+  background-color: $background-color; // Thêm màu nền cho container nếu body không có
+}
+
+.intro-section {
+  text-align: center;
+  margin-bottom: 30px;
+  color: $text-color;
+
+  h1 {
+    font-size: 2.5rem; // Tăng kích thước H1
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: $text-muted-color;
+  }
+
+  .btn-outline-light { // Style riêng cho nút trên nền tối
+    border-color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.8);
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  max-width: 750px; // Tăng nhẹ chiều rộng tối đa
+  margin: 0 auto; // Căn giữa danh sách
+
+  .notification-item {
+    background-color: $item-background-color;
+    padding: 18px 20px; // Tăng padding
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    border-radius: 12px; // Bo tròn hơn
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer;
+    border: 1px solid $item-border-color;
+    position: relative; // Cho unread-indicator
+
+    &:hover {
+      background-color: $item-background-hover-color;
+      transform: translateY(-2px); // Hiệu ứng nhấc lên khi hover
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    &.unread {
+      // font-weight: bold; // Có thể bỏ bold nếu dùng viền và nền
+      border-left: 5px solid $unread-border-color; // Viền trái màu nổi bật
+      background-color: lighten($item-background-color, 5%); // Nền sáng hơn một chút cho unread
+      box-shadow: 0 0 12px $unread-shadow-color; // Giữ lại shadow cho unread
+
+      .message-content { // Nội dung của tin nhắn chưa đọc có thể bold hơn
+          font-weight: 600;
+      }
+    }
+
+    &.read {
+      .message-content {
+        font-weight: normal;
+      }
+      .icon-container, .time-ago { // Làm mờ icon và thời gian của tin đã đọc
+        opacity: 0.7;
+      }
+    }
+
+    .icon-container {
+      font-size: 1.8rem; // Kích thước icon lớn hơn (nếu dùng emoji)
+      margin-right: 18px;
+      min-width: 30px; // Đảm bảo icon có không gian cố định
+      text-align: center;
+      // Nếu dùng icon font, có thể điều chỉnh kích thước ở đây hoặc trong getIconClass
+      i { // Style cho icon font nếu dùng
+         vertical-align: middle;
+      }
+    }
+
+    .content {
+      .message-content { // Đổi tên class để tránh xung đột
+        margin: 0;
+        // font-weight: 500; // Sẽ được điều chỉnh bởi .unread hoặc .read
+        line-height: 1.5;
+      }
+      .time-ago { // Đổi tên class
+        color: $text-muted-color;
+        font-size: 0.8rem; // Kích thước chữ nhỏ hơn
+      }
+    }
+
+    .unread-indicator {
+      width: 10px;
+      height: 10px;
+      background-color: $unread-indicator-color;
+      border-radius: 50%;
+      display: inline-block;
+      // position: absolute; // Nếu muốn định vị chính xác hơn
+      // top: 15px;
+      // right: 15px;
+    }
+  }
+}
+
+// Spinner và thông báo tải/không có dữ liệu
+.text-center.my-5 { // Cho spinner
+    p {
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+    }
+}
+.alert-info { // Cho thông báo "không có dữ liệu"
+    background-color: rgba(23, 39, 74, 0.8);}

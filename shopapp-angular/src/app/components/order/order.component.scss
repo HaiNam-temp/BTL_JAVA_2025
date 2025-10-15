@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  color: white;
+}
+
+.intro-section {
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.product-header {
+  color: rgb(233, 66, 176);
+}
+
+.product-order {
+  color: rgb(105, 244, 181);
+}
+
+.form-label {
+  color: white;
+}
+
+.form-control {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: rgb(19, 23, 42);
+  border: 1px solid rgb(29, 33, 54);
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-control:focus {
+  border-color: white;
+  background-color: rgb(19, 23, 42);
+}
+
+table {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: rgb(12, 13, 54);
+  border: 1px solid white;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  color: #ffb6d9;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+td {
+  color: white;
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tbody tr:not(:last-child) {
+  margin-bottom: 10px;
+  display: table-row;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.product-name {
+  color: white;
+  margin-right: 10px;
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #ff758c, #ff7eb3);
+  transition: all 0.3s ease-in-out;
+  color: white;
+  border-radius: 30px;
+  width: 200px;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 5px 15px rgba(255, 120, 180, 0.4);
+}
+
+.input-group input {
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.input-group button {
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.product-quantity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.border-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.border-wrapper button {
+  background: linear-gradient(45deg, #ff758c, #ff7eb3);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.border-wrapper button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 120, 180, 0.5);
+}
+
+.border-wrapper span,
+.border-wrapper button + button {
+  margin: 0 10px;
+}
+
+.border-wrapper > span {
+  color: white;
+  min-width: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}

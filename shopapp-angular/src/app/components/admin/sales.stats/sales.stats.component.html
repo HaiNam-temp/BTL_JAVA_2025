@@ -1,0 +1,45 @@
+<div class="card mt-4">
+  <div class="card-header bg-primary text-white">
+    <h3 class="mb-0">Thống kê Doanh Số</h3>
+  </div>
+  <div class="card-body">
+    <div class="row mb-3 align-items-end">
+      <div class="col-md-5">
+        <label for="salesStartDate" class="form-label">Từ ngày:</label>
+        <input type="date" id="salesStartDate" class="form-control" [(ngModel)]="startDateInput">
+      </div>
+      <div class="col-md-5">
+        <label for="salesEndDate" class="form-label">Đến ngày:</label>
+        <input type="date" id="salesEndDate" class="form-control" [(ngModel)]="endDateInput">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100" (click)="applyDateRangeAndLoadStats()">Xem</button>
+      </div>
+    </div>
+
+    <p class="lead">
+      Thống kê từ: <strong>{{ displayStartDate || 'N/A' }}</strong> đến: <strong>{{ displayEndDate || 'N/A' }}</strong>
+    </p>
+    <hr>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h5><strong>Tổng doanh số:</strong> {{ salesStats.totalSales }}</h5>
+        </div>
+      <div class="col-md-6">
+        <h5 class="text-center">Doanh số theo phương thức thanh toán</h5>
+        <div style="display: block; max-height: 300px;"> <canvas baseChart
+            [options]="pieChartOptions"
+            [datasets]="pieChartData"
+            [labels]="pieChartLabels"
+            [type]="pieChartType"
+            [legend]="pieChartLegend">
+          </canvas>
+        </div>
+        <div *ngIf="pieChartLabels.length === 0 && salesStats.totalSales === '0 đ'" class="text-center mt-3">
+            Không có dữ liệu doanh số trong khoảng thời gian này.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

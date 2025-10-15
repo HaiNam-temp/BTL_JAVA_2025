@@ -1,0 +1,109 @@
+.container {
+    color: #f0f0f5; /* Trắng sáng nhẹ hơn */
+    padding: 20px;
+    background-color: #0b0c3d; /* Nền tối đậm hơn cho toàn container */
+}
+
+.intro-section {
+    color: #f0f0f5;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #d953b8; /* Hồng tím dịu, sáng */
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #1b1f5e; /* Nền bảng xanh đậm */
+    border: 1px solid #ececec; /* Viền trắng nhạt */
+    margin-top: 20px;
+   
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+     color: black; /* Đổi sang trắng rõ hơn */
+     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    color: #f7bbd9; /* Hồng nhạt cho header */
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.07); /* Nền header nhạt */
+}
+
+tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* sáng hơn để thấy rõ */
+}
+
+tbody td {
+    padding: 12px 10px;
+     /* Bổ sung nếu không có, giúp đảm bảo màu rõ */
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.btn-gradient {
+    background: linear-gradient(45deg, #d43f69, #e868a2); /* gradient hồng đậm hơn */
+    transition: all 0.3s ease-in-out;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(212, 63, 105, 0.5);
+}
+
+.btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(232, 104, 162, 0.7);
+}
+
+.btn-danger.btn-gradient {
+    background: linear-gradient(45deg, #d9534f, #f06e54); /* đỏ cam */
+    box-shadow: 0 2px 6px rgba(217, 83, 79, 0.5);
+}
+
+.btn-danger.btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(240, 110, 84, 0.7);
+}
+
+.alert {
+    color: white;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.alert-info {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.alert-danger {
+    background-color: #b02a37;
+    border-color: #8b2229;
+}
+
+.alert-warning {
+    background-color: #ffb347; /* vàng cam sáng */
+    border-color: #e67e22;
+    color: #3c2a0a; /* chữ nâu đậm */
+}

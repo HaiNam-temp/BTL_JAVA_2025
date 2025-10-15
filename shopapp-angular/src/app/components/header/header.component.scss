@@ -1,0 +1,109 @@
+// Define variables
+$transparent: rgba(0, 0, 0, 0);
+$primary-color: #adb2cb;
+$highlight-color: #7f44ff;
+$text-color: #333;
+$hover-bg-color: #f0f0f0;
+$hover-text-color: red;
+$popover-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+// Reset default styles
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+// Header styles
+header {
+    background-color: $transparent;
+    color: $primary-color;
+    padding: 8px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+// Navbar styles
+.navbar {
+    background-color: $transparent !important;
+
+    .container {
+        background-color: $transparent !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .navbar-brand {
+            color: $primary-color;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            img {
+                margin-right: 8px;
+            }
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .nav-item {
+                .nav-link {
+                    color: $primary-color;
+                    border-radius: 12px;
+                    padding: 8px 16px;
+                    font-size: 1rem;
+                    transition: background-color 0.2s ease, color 0.2s ease;
+
+
+                    &:hover {
+                        background-color: rgba(127, 68, 255, 0.1);
+                        color: $highlight-color;
+                    }
+
+                    &.active {
+                        background-color: $highlight-color !important;
+                        color: #fff !important;
+                        border-radius: 0.5rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Popover styles
+.popover-list {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.popover-body {
+    padding: 0;
+}
+
+.popover-item {
+    display: block;
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: $text-color;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+        background-color: $hover-bg-color;
+        color: $hover-text-color;
+    }
+}
+
+// Popover override
+.popover {
+    border-radius: 10px;
+    box-shadow: $popover-shadow;
+}

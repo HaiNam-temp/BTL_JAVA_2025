@@ -1,0 +1,58 @@
+<app-header></app-header>
+<div class="container py-5">
+  <div class="intro-section text-center mb-5">
+    <h1 class="text-white">Chi tiết đơn hàng</h1>
+    <p class="text-light">Xem thông tin chi tiết đơn hàng</p>
+  </div>
+
+  <div *ngIf="orderResponse" class="row g-5">
+    <!-- Thông tin người nhận -->
+    <div class="col-md-6">
+      <div class="info-card p-4 rounded">
+        <h2 class="text-white mb-4">Thông tin người nhận</h2>
+        <p><strong>Họ và tên:</strong> {{ orderResponse.fullname }}</p>
+        <p><strong>Email:</strong> {{ orderResponse.email }}</p>
+        <p><strong>Số điện thoại:</strong> {{ orderResponse.phone_number }}</p>
+        <p><strong>Địa chỉ:</strong> {{ orderResponse.address }}</p>
+        <p><strong>Ghi chú:</strong> {{ orderResponse.note }}</p>
+        <p><strong>Phương thức vận chuyển:</strong> {{ orderResponse.shipping_method }}</p>
+        <p><strong>Phương thức thanh toán:</strong> {{ orderResponse.payment_method }}</p>
+      </div>
+    </div>
+
+    <!-- Sản phẩm đã đặt hàng -->
+    <div class="col-md-6">
+      <div class="product-card p-4 rounded">
+        <h2 class="text-white mb-4">Sản phẩm đã đặt hàng</h2>
+        <table class="table table-bordered text-white">
+          <thead class="table-dark">
+            <tr>
+              <th class="text-start">Sản phẩm</th>
+              <th>Số lượng</th>
+              <th>Đơn giá</th>
+              <th>Tổng giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of orderResponse.order_details">
+              <td>
+                <div class="product-info d-flex align-items-center">
+                  <img [src]="item.product.thumbnail" alt="Product Image" class="product-image me-2" />
+                  <span>{{ item.product.name }}</span>
+                </div>
+              </td>
+              <td>{{ item.number_of_products }}</td>
+              <td>{{ item.price | number:'1.0-0' }}</td>
+              <td>{{ item.total_money | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-end mt-3">
+          <h4 class="text-white">Tổng tiền: {{ orderResponse.total_money | number:'1.0-0' }} đ</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

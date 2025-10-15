@@ -1,0 +1,33 @@
+<h2>Thống kê Hàng Tồn</h2>
+
+<div style="display: block;">
+  <canvas baseChart
+    [options]="barChartOptions"
+    [datasets]="barChartData"
+    [labels]="barChartLabels"
+    [type]="barChartType"   [legend]="barChartLegend">
+  </canvas>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên sản phẩm</th>
+      <th>Giá</th>
+      <th>Số lượng tồn kho</th>
+      <th>Trạng thái</th>
+      <th>Danh mục</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.quantityInStock }}</td>
+      <td>{{ product.status }}</td>
+      <td>{{ product.categoryName }}</td>
+    </tr>
+  </tbody>
+</table>

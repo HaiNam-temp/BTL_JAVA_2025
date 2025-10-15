@@ -1,0 +1,39 @@
+<app-header></app-header>
+
+<div class="container">
+    <div class="intro-section">
+        <h1>Lịch Sử Mua Hàng</h1>
+    </div>
+
+    <div *ngIf="loading" class="alert alert-info">Đang tải lịch sử mua hàng...</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <table *ngIf="!loading && purchaseHistory.length > 0" class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="text-start">Mã Đơn Hàng</th>
+                <th scope="col">Ngày Đặt Hàng</th>
+                <th scope="col">Trạng Thái</th>
+                <th scope="col">Tổng Tiền</th>
+                <th scope="col">Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of purchaseHistory">
+                <td>{{ order.id }}</td>
+                <td>{{ order.order_date | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.total_money | currency:'VND':'symbol':'1.0-0' }}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary me-2 btn-gradient" (click)="viewOrderDetails(order.id)">Xem Chi Tiết</button>
+                    <button *ngIf="canCancelOrder(order.status)" class="btn btn-sm btn-danger btn-gradient" (click)="cancelOrder(order.id)">Hủy Đơn Hàng</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!loading && purchaseHistory.length === 0" class="alert alert-warning">
+        Không có đơn hàng nào.
+    </div>
+</div>
+<app-footer></app-footer>

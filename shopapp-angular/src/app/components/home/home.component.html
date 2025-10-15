@@ -1,0 +1,80 @@
+<app-header></app-header>
+<div class="container">
+    <div class="intro-section">
+        <h1>Chào mừng bạn đến với TadPhone!</h1>
+        <p>Khám phá thế giới công nghệ đỉnh cao với những sản phẩm mới nhất từ iPhone, Samsung, Apple Watch và nhiều hơn nữa. Chúng tôi luôn cập nhật những xu hướng dẫn đầu để mang đến trải nghiệm mua sắm tuyệt vời nhất cho bạn.</p>
+    </div>
+    <!--Searchbox bên trái, combobox bên phải -->
+    <div class="search-box">
+        <input type="text" class="form-control search-input" 
+            placeholder="Tìm sản phẩm" 
+            [(ngModel)]="keyword">
+        <select class="form-control product-category"             
+            [(ngModel)]="selectedCategoryId">
+            <option [value]="0">Tất cả</option> 
+            <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+            </option>
+        </select>
+        <button class="btn btn-primary ml-2" (click)="searchProducts()">Tìm kiếm</button>
+    </div> 
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6" *ngFor="let product of products">
+            <div class="product-item" (click)="onProductClick(product.id)">
+                <img [src]="product.url" alt="Product Image" class="product-image">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-description">{{ product.description }}</p>
+                <p class="product-price">Giá: {{ product.price | number:'1.0-0'}} VND</p>                
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" *ngIf="currentPage > 1">
+                    <a class="page-link" href="#" (click)="onPageChange(1)">First</a>
+                </li>
+                <li class="page-item" *ngIf="currentPage > 1">
+                    <a class="page-link" href="#" (click)="onPageChange(currentPage - 1)">Previous</a>
+                </li>
+                <ng-container *ngFor="let page of visiblePages">
+                    <li class="page-item" [ngClass]="{'active': page === currentPage}">
+                        <a class="page-link" href="#" (click)="onPageChange(page)">{{ page }}</a>
+                    </li>
+                </ng-container>
+                <li class="page-item" *ngIf="currentPage < totalPages">
+                    <a class="page-link" href="#" (click)="onPageChange(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" *ngIf="currentPage < totalPages">
+                    <a class="page-link" href="#" (click)="onPageChange(totalPages)">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="best-seller-section"></div>
+        <h2>Sản phẩm bán chạy</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of bestSellers">
+                <div class="product-item" (click)="onProductClick(product.id)">
+                    <img [src]="product.url" alt="Best Seller Image" class="product-image">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">Giá: {{ product.price | number:'1.0-0'}} VND</p>
+                </div>
+            </div>
+        </div>
+    <div class="best-price-section">
+        <h2>Sản phẩm giá tốt</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of bestPrices">
+                <div class="product-item" (click)="onProductClick(product.id)">
+                    <img [src]="product.url" alt="Best Price Image" class="product-image">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">Giá: {{ product.price | number:'1.0-0'}} VND</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-map></app-map>
+<app-footer></app-footer>
