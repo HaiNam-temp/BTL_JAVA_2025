@@ -27,10 +27,11 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SPRING_FLYWAY_ENABLED: 'false'
       SERVER_PORT: ${APP_PORT}
     depends_on:
       db:
@@ -52,7 +53,7 @@ services:
         condition: service_healthy
     volumes:
       - ./src/main/resources/db/migration:/flyway/sql:ro
-    command: -url=jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} -locations=filesystem:/flyway/sql migrate -connectRetries=60
+    command: -url=jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} -locations=filesystem:/flyway/sql migrate -connectRetries=60
 
 volumes:
   db_data:
