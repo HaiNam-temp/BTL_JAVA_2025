@@ -16,6 +16,7 @@ import com.project.shopapp.services.notification.INotificationService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")
+@Slf4j
 @RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
@@ -49,6 +51,7 @@ public class OrderController {
             @Valid @PathVariable("user_id") Long userId
     ){
         try {
+            log.info("Fetching orders for user ID: {}", userId);
             List<Order> orders = orderService.findByUserId(userId);
             return ResponseEntity.ok(orders );
         }catch (Exception e){
@@ -60,6 +63,8 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrder(@Valid @PathVariable("id") Long orderId) {
         try {
+
+            log.info("Fetching order with ID: {}", orderId);
             Order existingOrder = orderService.getOrderById(orderId);
             OrderResponse orderResponse = OrderResponse.fromOrder(existingOrder);
             return ResponseEntity.ok(orderResponse);
@@ -74,6 +79,7 @@ public class OrderController {
             @Valid @RequestBody OrderDTO orderDTO,
             BindingResult result
     ) throws Exception {
+        log.info("Creating new order for user ID: {}", orderDTO);
         if(result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
                     .stream()
@@ -107,7 +113,7 @@ public class OrderController {
     public ResponseEntity<ResponseObject> updateOrder(
             @Valid @PathVariable long id,
             @Valid @RequestBody OrderDTO orderDTO) throws Exception {
-
+            log.info("Updating order with ID: {}", id);
         Order order = orderService.updateOrder(id, orderDTO);
         return ResponseEntity.ok(new ResponseObject("Update order successfully", HttpStatus.OK, order));
     }

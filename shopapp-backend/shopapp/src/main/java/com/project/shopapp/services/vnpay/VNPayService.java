@@ -8,6 +8,7 @@ import com.project.shopapp.dtos.payment.PaymentQueryDTO;
 import com.project.shopapp.dtos.payment.PaymentRefundDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class VNPayService implements IVNPayService {
 
@@ -28,10 +30,11 @@ public class VNPayService implements IVNPayService {
 
     @Override
     public String createPaymentUrl(PaymentDTO paymentDto, HttpServletRequest httpRequest) {
+        log.info("Creating VNPay payment URL for amount: {}", paymentDto);
         String version = "2.1.0";
         String command = "pay";
         String orderType = "other";
-        long amount = paymentDto.getAmount() * 100; // Số tiền cần nhân với 100
+        long amount = paymentDto.getAmount() * 1000; // Số tiền cần nhân với 100
         String bankCode = paymentDto.getBankCode();
 
         String transactionReference = vnPayUtils.getRandomNumber(8); // Mã giao dịch
@@ -96,12 +99,14 @@ public class VNPayService implements IVNPayService {
 
         String secureHash = vnPayUtils.hmacSHA512(vnPayConfig.getSecretKey(), hashData.toString());
         queryData.append("&vnp_SecureHash=").append(secureHash);
-
+        log.info("VNPay payment URL created successfully for OrderId: {}", paymentDto);
+        log.info("Payment URL: {}", vnPayConfig.getVnpPayUrl() + "?" + queryData.toString());
         return vnPayConfig.getVnpPayUrl() + "?" + queryData;
     }
     @Override
     public String queryTransaction(PaymentQueryDTO queryDto, HttpServletRequest httpRequest) throws IOException {
         // Chuẩn bị tham số cho VNPay
+        log.info("Querying VNPay transaction for OrderId: {}", queryDto);
         String requestId = vnPayUtils.getRandomNumber(8);
         String version = "2.1.0";
         String command = "querydr";
@@ -156,6 +161,7 @@ public class VNPayService implements IVNPayService {
     }
 
     public String refundTransaction(PaymentRefundDTO refundRequest) throws IOException {
+        log.info("Processing VNPay refund for OrderId: {}", refundRequest);
         String requestId = vnPayUtils.getRandomNumber(8); // Unique request ID
         String version = "2.1.0"; // API version
         String command = "refund"; // Refund command

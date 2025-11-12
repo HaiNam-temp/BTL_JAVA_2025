@@ -8,6 +8,7 @@ import com.project.shopapp.services.IOrderDetailService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/order_details")
+@Slf4j
 @RequiredArgsConstructor
 public class OrderDetailController {
     private final IOrderDetailService orderDetailService;
@@ -24,6 +26,7 @@ public class OrderDetailController {
     public ResponseEntity<?> getOrderDetail(
             @Valid @PathVariable Long id
     ){
+        log.info("Get order detail with id: {}", id);
         try {
             OrderDetail orderDetail = orderDetailService.gerOrderDetail(id);
             return ResponseEntity.ok(OrderDetailResponse.fromOrderDetail(orderDetail));

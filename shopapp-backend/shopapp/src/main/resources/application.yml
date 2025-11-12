@@ -77,6 +77,6 @@ logging:
 vnpay:
   pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
   return-url: "${VNPAY_RETURN_URI:http://localhost:4200/payments/payment-callback}"
-  tmn-code: "ZTP9F7HS" # Add your TMN code here
-  secret-key: "T7BWIUWPK72WUOA4UEP2DQ33SAW3B1CS" # Add your secret key here
+  tmn-code: "CLJEMML7" # Add your TMN code here
+  secret-key: "6PQ70KMHTHWZ722R9530K8G9NDXG1K28"
   api-url: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"
