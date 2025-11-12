@@ -27,6 +27,7 @@ import { of } from 'rxjs';
 })
 export class LoginComponent extends BaseComponent implements OnInit{
   @ViewChild('loginForm') loginForm!: NgForm;
+  returnUrl?: string;
 
   //Login User
   // phoneNumber: string = '15122003';
@@ -48,6 +49,8 @@ export class LoginComponent extends BaseComponent implements OnInit{
  
 
   ngOnInit() {
+    // If a returnUrl query param is supplied (e.g., when redirected from a guarded route), keep it
+    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
     // Gọi API lấy danh sách roles và lưu vào biến roles
     debugger
     this.roleService.getRoles().subscribe({      
@@ -112,7 +115,9 @@ export class LoginComponent extends BaseComponent implements OnInit{
       password: this.password,
       role_id: this.selectedRole?.id ?? 1
     };
-  
+    // Track whether we already navigated/reloaded during the observable chain
+    let navigated = false;
+
     this.userService.login(loginDTO).pipe(
       tap((apiResponse: ApiResponse) => {
         const { token } = apiResponse.data;
@@ -126,20 +131,33 @@ export class LoginComponent extends BaseComponent implements OnInit{
               ...apiResponse2.data,
               date_of_birth: new Date(apiResponse2.data.date_of_birth),
             };
-  
+
             if (this.rememberMe) {
               this.userService.saveUserResponseToLocalStorage(this.userResponse);
             }
-  
+
             if (this.userResponse?.role.name === 'admin') {
-              this.router.navigate(['/admin']);
+              // For admin, perform a full navigation + reload to ensure app state updates
+              navigated = true;
+              window.location.href = '/admin';
             } else if (this.userResponse?.role.name === 'user') {
-              this.router.navigate(['/']);
+              // Always perform a full-page navigation so header/cart re-reads localStorage.
+              // If a returnUrl was provided (e.g., /cart), go there; otherwise reload current page.
+              if (this.returnUrl && this.returnUrl !== '/') {
+                navigated = true;
+                // Full page load to the returnUrl
+                window.location.href = this.returnUrl;
+              } else {
+                navigated = true;
+                // No specific return URL: navigate to home with a full page load so UI updates
+                window.location.href = '/';
+              }
             }
           }),
           catchError((error: HttpErrorResponse) => {
+            // If getUserDetail fails, we still want the UI to update (reload)
             console.error('Lỗi khi lấy thông tin người dùng:', error?.error?.message ?? '');
-            return of(null); // Tiếp tục chuỗi Observable
+            return of(null); // Continue the chain with null
           })
         );
       }),
@@ -147,6 +165,23 @@ export class LoginComponent extends BaseComponent implements OnInit{
         this.cartService.refreshCart();
       })
     ).subscribe({
+      next: () => {
+        // If no navigation/reload happened inside the chain (e.g., getUserDetail failed),
+        // trigger a full reload so header/components pick up the new token/user state.
+        if (!navigated) {
+          try {
+            // No navigation happened inside the chain: perform a full page load to the returnUrl or home
+            if (this.returnUrl && this.returnUrl !== '/') {
+              window.location.href = this.returnUrl;
+            } else {
+              window.location.href = '/';
+            }
+          } catch (e) {
+            // As a fallback, navigate to home using the router
+            this.router.navigate(['/']);
+          }
+        }
+      },
       error: (error: HttpErrorResponse) => {
         this.toastService.showToast({
           error: error,

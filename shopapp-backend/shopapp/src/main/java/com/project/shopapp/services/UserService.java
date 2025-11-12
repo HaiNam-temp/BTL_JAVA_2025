@@ -17,6 +17,7 @@ import com.project.shopapp.repositories.TokenRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import static com.project.shopapp.utils.ValidationUtils.isValidEmail;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService implements IUserService{
     private final UserRepository userRepository;
@@ -85,6 +87,7 @@ public class UserService implements IUserService{
 
     @Override
     public String login(UserLoginDTO userLoginDTO) throws Exception {
+        log.info("UserService - login called with UserLoginDTO: {}", userLoginDTO);
         Optional<User> optionalUser = Optional.empty();
 
         // Kiểm tra người dùng qua số điện thoại

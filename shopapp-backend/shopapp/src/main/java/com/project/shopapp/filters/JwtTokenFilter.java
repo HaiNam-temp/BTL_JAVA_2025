@@ -69,6 +69,10 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
     }
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
+        // Allow CORS preflight requests through so they are not blocked with 401
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            return true;
+        }
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 // Healthcheck request, no JWT token required
                 Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),

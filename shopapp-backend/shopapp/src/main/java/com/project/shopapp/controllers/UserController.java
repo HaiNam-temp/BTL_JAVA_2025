@@ -17,6 +17,7 @@ import com.project.shopapp.utils.ValidationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,6 +37,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final IUserService userService;
     private final ITokenService tokenService;
@@ -134,6 +136,7 @@ public class UserController {
             HttpServletRequest request
     ) throws Exception {
         // Kiểm tra thông tin đăng nhập và sinh token
+        log.info("User login attempt: " + userLoginDTO);
         String token = userService.login(userLoginDTO);
         String userAgent = request.getHeader("User-Agent");
         User userDetail = userService.getUserDetailsFromToken(token);
@@ -148,6 +151,7 @@ public class UserController {
                 .roles(userDetail.getAuthorities().stream().map(item -> item.getAuthority()).toList())
                 .id(userDetail.getId())
                 .build();
+        log.info("User login successful: {}", loginResponse);
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Login successfully")
                 .data(loginResponse)
@@ -161,7 +165,6 @@ public class UserController {
     }
 
     @PostMapping("/details")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> getUserDetails(
             @RequestHeader("Authorization") String authorizationHeader
     ) throws Exception {

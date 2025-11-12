@@ -53,7 +53,7 @@ services:
         condition: service_healthy
     volumes:
       - ./src/main/resources/db/migration:/flyway/sql:ro
-    command: -url=jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} -locations=filesystem:/flyway/sql migrate -connectRetries=60
+    command: -url=jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true -user=root -password=${MYSQL_ROOT_PASSWORD} -locations=filesystem:/flyway/sql -baselineOnMigrate=true migrate -connectRetries=60
 
 volumes:
   db_data:
