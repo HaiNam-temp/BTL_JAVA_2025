@@ -14,33 +14,33 @@ import { CategoryService } from '../../../../service/category.service';
   templateUrl: './insert.category.admin.component.html',
   styleUrls: ['./insert.category.admin.component.scss'],
   standalone: true,
-  imports: [   
+  imports: [
     CommonModule,
-    FormsModule,    
+    FormsModule,
   ]
 })
 export class InsertCategoryAdminComponent implements OnInit {
   insertCategoryDTO: InsertCategoryDTO = {
-    name: '',    
+    name: '',
   };
   categories: Category[] = []; // Dữ liệu động từ categoryService
-  constructor(    
+  constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private categoryService: CategoryService,    
-    private productService: ProductService,    
+    private categoryService: CategoryService,
+    private productService: ProductService,
   ) {
-    
-  } 
-  ngOnInit() {
-    
-  }   
 
-  insertCategory() {    
+  }
+  ngOnInit() {
+
+  }
+
+  insertCategory() {
     this.categoryService.insertCategory(this.insertCategoryDTO).subscribe({
       next: (response) => {
         debugger
-        this.router.navigate(['/admin/categories']);        
+        this.router.navigate(['/admin/categories']);
       },
       error: (error) => {
         debugger
@@ -48,6 +48,6 @@ export class InsertCategoryAdminComponent implements OnInit {
         alert(error.error)
         console.error('Error inserting category:', error);
       }
-    });    
+    });
   }
 }

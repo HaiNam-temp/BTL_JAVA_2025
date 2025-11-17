@@ -13,9 +13,9 @@ import { TokenService } from '../service/token.service';
 export class AdminGuard {
   userResponse?:UserResponse | null;
   constructor(
-    private tokenService: TokenService, 
+    private tokenService: TokenService,
     private router: Router,
-    private userService:UserService 
+    private userService:UserService
   ) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -32,11 +32,11 @@ export class AdminGuard {
       this.router.navigate(['/login']);
       return false;
     }
-  }  
+  }
 }
 
 export const AdminGuardFn: CanActivateFn = (
-  next: ActivatedRouteSnapshot, 
+  next: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ): boolean => {
   debugger

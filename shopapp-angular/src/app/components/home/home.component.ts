@@ -21,6 +21,7 @@ import { BaseComponent } from '../base/base.component';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseComponent implements OnInit {
+
   products: Product[] = [];
   hotProducts: Product[] = [];
   bestSellers: Product[] = [];
@@ -34,36 +35,23 @@ export class HomeComponent extends BaseComponent implements OnInit {
   visiblePages: number[] = [];
   keyword: string = '';
 
+  // ===== SORT CHO USER =====
+  sortField: string = 'id';    // id | price | createdAt
+  sortDir: string = 'asc';     // asc | desc
+
   ngOnInit() {
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
     this.getCategories(1, 100);
   }
 
-  // ====== HÀM BUILD URL ẢNH DÙNG CHUNG ======
   private buildImageUrl(raw: string | null | undefined): string {
-    if (!raw) {
-      return 'assets/images/no-image.jpg';
-    }
-
+    if (!raw) return 'assets/images/no-image.jpg';
     const value = raw.trim();
 
-    // 1. Link ngoài (CDN, website khác) -> dùng trực tiếp
-    if (value.startsWith('http://') || value.startsWith('https://')) {
-      return value;
-    }
+    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+    if (value.startsWith('/images/')) return `assets${value}`;
+    if (value.startsWith('images/')) return `assets/${value}`;
 
-    // 2. Đường dẫn ảnh đặt trong FE: /images/... -> trỏ vào thư mục assets
-    if (value.startsWith('/images/')) {
-      // DB: /images/products/smartphone_a.jpg
-      // FE: assets/images/products/smartphone_a.jpg
-      return `assets${value}`;
-    }
-    if (value.startsWith('images/')) {
-      return `assets/${value}`;
-    }
-
-    // 3. Mặc định: tên file lưu trong thư mục uploads của backend
-    //    DB: smartphone_a.jpg  ->  GET /products/images/smartphone_a.jpg
     return `${environment.apiBaseUrl}/products/images/${value}`;
   }
 
@@ -72,7 +60,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
       next: (apiResponse: ApiResponse) => {
         this.categories = apiResponse.data;
       },
-      complete: () => {},
       error: (error: HttpErrorResponse) => {
         this.toastService.showToast({
           error: error,
@@ -83,40 +70,49 @@ export class HomeComponent extends BaseComponent implements OnInit {
     });
   }
 
+  // khi user đổi sort
+  onSortChange() {
+    this.currentPage = 1;
+    this.getProducts(
+      this.keyword,
+      this.selectedCategoryId,
+      this.currentPage,
+      this.itemsPerPage
+    );
+  }
+
   searchProducts() {
     this.currentPage = 1;
-    this.itemsPerPage = 6; // muốn trang tìm kiếm hiển thị nhiều hơn
+    this.itemsPerPage = 6;
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
   }
 
   getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
-    this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
+    this.productService.getProducts(
+      keyword,
+      selectedCategoryId,
+      page,
+      limit,
+      this.sortField,   // gửi sort
+      this.sortDir
+    ).subscribe({
       next: (response: any) => {
-        // Gán URL ảnh đúng theo từng trường hợp
         response.products.forEach((product: Product) => {
-          // ƯU TIÊN thumbnail cho giống DB, sau đó mới đến product_images[0]
           const img =
             product.thumbnail ||
             product.product_images?.[0]?.image_url ||
             '';
-
           product.url = this.buildImageUrl(img);
         });
 
         this.products = response.products;
 
-        // Bán chạy: tạm thời lấy 4 sản phẩm từ vị trí 2–5 của trang hiện tại
         this.bestSellers = this.products.slice(2, 6);
-
-        // Giá tốt: giá < 10 triệu trong trang hiện tại, tối đa 3 sp
-        this.bestPrices = this.products
-          .filter(p => +p.price < 10000000)
-          .slice(0, 3);
+        this.bestPrices = this.products.filter(p => +p.price < 10000000).slice(0, 3);
 
         this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
-      complete: () => {},
       error: (error: any) => {
         console.error('Error fetching products:', error);
       }
@@ -130,21 +126,17 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   override generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
     const maxVisiblePages = 5;
-    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+    const half = Math.floor(maxVisiblePages / 2);
 
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let start = Math.max(currentPage - half, 1);
+    let end = Math.min(start + maxVisiblePages - 1, totalPages);
 
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
-    }
+    if (end - start + 1 < maxVisiblePages)
+      start = Math.max(end - maxVisiblePages + 1, 1);
 
-    return new Array(endPage - startPage + 1)
-      .fill(0)
-      .map((_, index) => startPage + index);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
-  // Khi click sản phẩm -> chuyển sang trang chi tiết
   onProductClick(productId: number) {
     this.router.navigate(['/products', productId]);
   }

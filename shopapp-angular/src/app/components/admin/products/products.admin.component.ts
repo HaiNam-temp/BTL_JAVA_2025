@@ -28,6 +28,9 @@ export class ProductsAdminComponent implements OnInit {
   keyword: string = '';
   localStorage?: Storage;
 
+  sortField: string = 'id';      // 'id' | 'price' | 'createdAt'
+  sortDir: string = 'asc';       // 'asc' | 'desc'
+
   constructor(
     private productService: ProductService,
     private router: Router,
@@ -70,12 +73,35 @@ export class ProductsAdminComponent implements OnInit {
   searchProducts() {
     this.currentPage = 0;
     this.itemsPerPage = 6;
-    this.getProducts(this.keyword.trim(), this.selectedCategoryId, this.currentPage, this.itemsPerPage);
+    this.getProducts(
+      this.keyword.trim(),
+      this.selectedCategoryId,
+      this.currentPage,
+      this.itemsPerPage
+    );
+  }
+
+  // ===== gọi khi đổi sortField / sortDir =====
+  onSortChange() {
+    this.currentPage = 0;
+    this.getProducts(
+      this.keyword.trim(),
+      this.selectedCategoryId,
+      this.currentPage,
+      this.itemsPerPage
+    );
   }
 
   getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
     // backend đang dùng page = 1-based nên FE gửi page + 1
-    this.productService.getProducts(keyword, selectedCategoryId, page + 1, limit).subscribe({
+    this.productService.getProducts(
+      keyword,
+      selectedCategoryId,
+      page + 1,
+      limit,
+      this.sortField,   // gửi sortField xuống backend
+      this.sortDir      // gửi sortDir xuống backend
+    ).subscribe({
       next: (response: any) => {
         response.products.forEach((product: Product) => {
           // ƯU TIÊN thumbnail cho khớp với DB, sau đó mới product_images[0]

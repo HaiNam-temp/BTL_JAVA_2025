@@ -51,27 +51,46 @@ public class ProductController {
     private  final ProductService productService;
     private final LocalizationUtils localizationUtils;
 
-    @GetMapping("")// http://localhost:8088/api/v1/products
+    @GetMapping("") // http://localhost:8088/api/v1/products
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit
-    ){
-        PageRequest pageRequest = PageRequest.of(page > 0 ? page - 1 : 0, limit, Sort.by("id").ascending());
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        Sort.Direction direction =
+                sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d"
-                ,keyword,categoryId,page,limit));
-        Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
-        // Lấy tổng số trang
+        Sort sort = Sort.by(direction, sortField);
+
+        // Backend dùng 0-based
+        PageRequest pageRequest = PageRequest.of(
+                page > 0 ? page - 1 : 0,
+                limit,
+                sort
+        );
+
+        logger.info(String.format(
+                "keyword = %s, category_id = %d, page = %d, limit = %d, sort=%s %s",
+                keyword, categoryId, page, limit, sortField, sortDir
+        ));
+
+        Page<ProductResponse> productPage =
+                productService.getAllProducts(keyword, categoryId, pageRequest);
+
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
-        return ResponseEntity.ok(ProductListResponse
-                .builder()
-                .products(products)
-                .totalPages(totalPages)
-                .build());
+
+        return ResponseEntity.ok(
+                ProductListResponse.builder()
+                        .products(products)
+                        .totalPages(totalPages)
+                        .build()
+        );
     }
+
 
     @GetMapping("/{id}")// http://localhost:8088/api/v1/products
     public ResponseEntity<ResponseObject> getProductById(
@@ -207,30 +226,6 @@ public class ProductController {
             logger.error("Error occurred while retrieving image: " + e.getMessage());
             return ResponseEntity.notFound().build();
         }
-    }
-
-    private  String storeFile(MultipartFile file) throws IOException{
-        if(!isImageFile(file)){
-            throw new IOException("Invalid image format");
-        }
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        //Thêm UUID đảm bảo file unique
-        String uniqueFileName = UUID.randomUUID() + "_" + fileName;
-        //Đường dẫn đến thư mục lưu file
-        java.nio.file.Path uploadDir = Paths.get("uploads");
-        //Kiểm tra và tạo thư mục nếu không tồn tại
-        if(!Files.exists(uploadDir)){
-            Files.createDirectories(uploadDir);
-        }
-        //Đường dẫn đầy đủ đến file
-        java.nio.file.Path destination  = Paths.get(uploadDir.toString(),uniqueFileName);
-        //Sao chép file vào thư mục đích
-        Files.copy(file.getInputStream(),destination, StandardCopyOption.REPLACE_EXISTING);
-        return uniqueFileName;
-    }
-    private  boolean isImageFile(MultipartFile file) {
-        String contentType = file.getContentType();
-        return contentType.startsWith("image/");
     }
     //update a product
     @PutMapping("/{id}")
